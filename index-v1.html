@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salt Spring Island OCP — Critical Analysis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #faf9f6;
+    --bg-alt: #f3f1ec;
+    --text: #2c2c2c;
+    --text-muted: #6b6b6b;
+    --accent: #1a5f3a;
+    --accent-light: #e8f2ec;
+    --accent-dark: #0e3d24;
+    --border: #ddd8cf;
+    --red: #9b2c2c;
+    --red-light: #fef2f2;
+    --amber: #92400e;
+    --amber-light: #fffbeb;
+    --blue: #1e40af;
+    --blue-light: #eff6ff;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-lg: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; font-size: 17px; }
+
+  body {
+    font-family: 'Crimson Pro', Georgia, serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* --- HEADER --- */
+  header {
+    background: linear-gradient(135deg, #0e3d24 0%, #1a5f3a 50%, #2d7a4f 100%);
+    color: white;
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.5;
+  }
+  header h1 {
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 2.6rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.3rem;
+    position: relative;
+  }
+  header .subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-bottom: 1.2rem;
+    position: relative;
+  }
+  header .meta {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    opacity: 0.6;
+    position: relative;
+  }
+
+  /* --- NAV --- */
+  nav {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  nav .nav-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  nav .nav-inner::-webkit-scrollbar { display: none; }
+  nav a {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 0.9rem 1.2rem;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  nav a:hover, nav a.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* --- MAIN --- */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  section {
+    margin-bottom: 3.5rem;
+  }
+
+  h2 {
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--accent-dark);
+    margin-bottom: 0.3rem;
+    letter-spacing: -0.01em;
+    padding-top: 1rem;
+  }
+  h2 .section-number {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+
+  h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 1.8rem 0 0.6rem;
+    letter-spacing: 0.01em;
+  }
+
+  p { margin-bottom: 1rem; }
+
+  .lead {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.8;
+    border-left: 3px solid var(--accent);
+    padding-left: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2.5rem 0;
+  }
+
+  /* --- GRADE BOX --- */
+  .grade-box {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem 2rem;
+    margin: 1.5rem 0;
+    box-shadow: var(--shadow);
+  }
+  .grade-letter {
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--amber);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .grade-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+  }
+
+  /* --- FINDING CARDS --- */
+  .finding {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.3rem 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--border);
+    transition: box-shadow 0.2s;
+  }
+  .finding:hover { box-shadow: var(--shadow-lg); }
+  .finding.severity-high { border-left-color: var(--red); }
+  .finding.severity-medium { border-left-color: var(--amber); }
+  .finding.severity-low { border-left-color: var(--blue); }
+
+  .finding-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .finding-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .finding-tag {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tag-high { background: var(--red-light); color: var(--red); }
+  .tag-medium { background: var(--amber-light); color: var(--amber); }
+  .tag-low { background: var(--blue-light); color: var(--blue); }
+
+  .finding-body {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+  .finding-ref {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    color: var(--accent);
+    font-weight: 500;
+    margin-top: 0.5rem;
+    display: block;
+  }
+
+  /* --- SEARCH / Q&A --- */
+  .search-container {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow);
+  }
+  .search-container label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .search-row {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .search-row input {
+    flex: 1;
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 1.05rem;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s;
+    background: var(--bg);
+  }
+  .search-row input:focus { border-color: var(--accent); }
+  .search-row button {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.6rem 1.3rem;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .search-row button:hover { background: var(--accent-dark); }
+
+  .qa-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.8rem;
+  }
+  .qa-chip {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    padding: 0.3rem 0.7rem;
+    background: var(--accent-light);
+    color: var(--accent-dark);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background 0.15s;
+    border: none;
+  }
+  .qa-chip:hover { background: #d0e6d8; }
+
+  .search-results {
+    margin-top: 1rem;
+  }
+  .search-result-item {
+    background: var(--bg-alt);
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.6rem;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .search-result-item strong {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    color: var(--accent-dark);
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  .search-result-item mark {
+    background: #fef08a;
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+  .no-results {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    padding: 1rem 0;
+    text-align: center;
+  }
+
+  /* --- STATS BAR --- */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .stat-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .stat-number {
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--accent-dark);
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-top: 0.3rem;
+  }
+
+  /* --- COLLAPSIBLE --- */
+  details {
+    margin-bottom: 0.8rem;
+  }
+  details summary {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.6rem 0;
+    color: var(--text);
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  details summary::before {
+    content: '▸';
+    font-size: 0.8rem;
+    color: var(--accent);
+    transition: transform 0.2s;
+  }
+  details[open] summary::before {
+    transform: rotate(90deg);
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details .detail-body {
+    padding: 0.5rem 0 0.5rem 1.2rem;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    border-left: 2px solid var(--accent-light);
+  }
+
+  /* --- TABLE --- */
+  .assessment-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.2rem 0;
+    font-size: 0.88rem;
+  }
+  .assessment-table th {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: left;
+    padding: 0.7rem 1rem;
+    background: var(--bg-alt);
+    border-bottom: 2px solid var(--border);
+    color: var(--text-muted);
+  }
+  .assessment-table td {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .assessment-table tr:hover { background: var(--bg-alt); }
+
+  .pill {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    display: inline-block;
+  }
+  .pill-strong { background: #dcfce7; color: #166534; }
+  .pill-moderate { background: #fef3c7; color: #92400e; }
+  .pill-weak { background: #fee2e2; color: #991b1b; }
+
+  /* --- FOOTER --- */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 640px) {
+    header h1 { font-size: 1.8rem; }
+    main { padding: 1.5rem 1rem 3rem; }
+    h2 { font-size: 1.5rem; }
+    .grade-box { flex-direction: column; text-align: center; }
+    nav a { padding: 0.7rem 0.8rem; font-size: 0.7rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Salt Spring Island OCP</h1>
+  <div class="subtitle">A Critical Academic Analysis of Bylaw No. 434</div>
+  <div class="meta">158-page document · Adopted 2008 · Consolidated October 2022 · Volumes 1 &amp; 2</div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#overview">Overview</a>
+    <a href="#ask">Ask a Question</a>
+    <a href="#inconsistencies">Inconsistencies</a>
+    <a href="#vague">Vague Terms</a>
+    <a href="#weaknesses">Weakest Parts</a>
+    <a href="#coherence">Coherence</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ==================== OVERVIEW ==================== -->
+<section id="overview">
+  <h2><span class="section-number">Part I</span>Document Overview</h2>
+  <p class="lead">The Salt Spring Island Official Community Plan is a two-volume bylaw that establishes the vision, land use designations, and development permit guidelines for the island within the Islands Trust Area. This analysis evaluates its effectiveness as a regulatory policy document.</p>
+
+  <div class="stats-bar">
+    <div class="stat-card"><div class="stat-number">158</div><div class="stat-label">Total Pages</div></div>
+    <div class="stat-card"><div class="stat-number">7</div><div class="stat-label">Dev. Permit Areas</div></div>
+    <div class="stat-card"><div class="stat-number">28</div><div class="stat-label">Official Maps</div></div>
+    <div class="stat-card"><div class="stat-number">14+</div><div class="stat-label">Years Since Adoption</div></div>
+  </div>
+
+  <p>The OCP is structured in four main parts. <strong>Part A</strong> sets out the Islands Trust mandate, a community vision statement, and broad objectives covering sustainability, limits to growth, community character, and climate change. <strong>Part B</strong> establishes specific land use designations&mdash;residential, commercial, agricultural, village, conservation, and shoreline&mdash;each with detailed objectives and policies. <strong>Part C</strong> addresses infrastructure and servicing, including transportation, potable water, waste management, and telecommunications. <strong>Part D</strong> covers administration, implementation, monitoring, and definitions.</p>
+  <p>Volume 2 contains the Development Permit Area guidelines (Parts E&ndash;F), a Heritage Conservation Area for Ganges Village, Temporary Use Permit policies (Part G), and appendices defining amenity zoning, transfer of development potential, and park land dedication procedures (Part H).</p>
+
+  <div class="grade-box">
+    <div class="grade-letter">C+</div>
+    <div class="grade-desc">
+      <strong>Overall Regulatory Effectiveness</strong><br>
+      The OCP is comprehensive in its aspirations and articulates strong environmental values, but it functions more as a guidance document than a binding regulatory framework. Pervasive discretionary language, undefined core terms, weak enforcement mechanisms, and unresolved internal contradictions substantially diminish its effectiveness as a policy instrument that islanders can rely on for consistent, predictable governance.
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ==================== ASK A QUESTION ==================== -->
+<section id="ask">
+  <h2><span class="section-number">Part II</span>Ask About the OCP</h2>
+  <p>Search through the full text of the Official Community Plan. Type a question or keyword below to find relevant sections.</p>
+
+  <div class="search-container">
+    <label for="searchInput">Search the OCP document</label>
+    <div class="search-row">
+      <input type="text" id="searchInput" placeholder="e.g. affordable housing, water supply, agricultural land…">
+      <button onclick="performSearch()">Search</button>
+    </div>
+    <div class="qa-topics">
+      <button class="qa-chip" onclick="quickSearch('affordable housing')">Affordable Housing</button>
+      <button class="qa-chip" onclick="quickSearch('water supply')">Water Supply</button>
+      <button class="qa-chip" onclick="quickSearch('agricultural land')">Agricultural Land</button>
+      <button class="qa-chip" onclick="quickSearch('climate change')">Climate Change</button>
+      <button class="qa-chip" onclick="quickSearch('shoreline')">Shoreline</button>
+      <button class="qa-chip" onclick="quickSearch('Ganges Village')">Ganges Village</button>
+      <button class="qa-chip" onclick="quickSearch('density')">Density</button>
+      <button class="qa-chip" onclick="quickSearch('First Nations')">First Nations</button>
+      <button class="qa-chip" onclick="quickSearch('heritage')">Heritage</button>
+      <button class="qa-chip" onclick="quickSearch('secondary suite')">Secondary Suites</button>
+      <button class="qa-chip" onclick="quickSearch('conservation')">Conservation</button>
+      <button class="qa-chip" onclick="quickSearch('forestry')">Forestry</button>
+    </div>
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ==================== INCONSISTENCIES ==================== -->
+<section id="inconsistencies">
+  <h2><span class="section-number">Part III</span>Inconsistencies</h2>
+  <p class="lead">The following are internal contradictions and policy tensions identified through systematic analysis of the OCP. These are cases where one section of the plan conflicts with, undermines, or creates irreconcilable tension with another section.</p>
+
+  <div class="finding severity-high">
+    <div class="finding-header">
+      <div class="finding-title">Growth Caps vs. Affordable Housing & Amenity Zoning</div>
+      <span class="finding-tag tag-high">Critical</span>
+    </div>
+    <div class="finding-body">
+      Section B.2.1.2.1 establishes a foundational growth cap: "Zoning changes should be avoided if they would likely result in a larger island population than is expected under the development potential zoned in 2008." However, sections B.2.2.2.6–B.2.2.2.9 simultaneously encourage inclusionary zoning for affordable housing with language like "could be allowed" and "should be considered." Appendix 3 (H.3.1.3) then permits up to 40 additional dwelling units island-wide through amenity zoning. The Plan never clarifies whether these density increases fall within or exceed the 2008 baseline, creating a fundamental contradiction at the heart of the document's growth management framework.
+    </div>
+    <span class="finding-ref">Sections: B.2.1.2.1, B.2.2.2.6–B.2.2.2.9, B.2.2.2.18, H.3.1.3</span>
+  </div>
+
+  <div class="finding severity-high">
+    <div class="finding-header">
+      <div class="finding-title">Agricultural Land Protection vs. Permitted Non-Farm Uses</div>
+      <span class="finding-tag tag-high">Critical</span>
+    </div>
+    <div class="finding-body">
+      Section B.6.2.2.20 states unambiguously: "Zoning changes should not be made to allow large new multi-family, general employment, institutional or commercial developments in the Agriculture or Watershed-Agriculture Designation." Yet Section B.7.2.2.7 directly supports "non-farm use of, removal from, and subdivision of limited amounts of land in the Agricultural Land Reserve" for parks expansion, including approximately 7 hectares across two sites. Section B.6.2.2.10 further permits tourist accommodation, farming schools, and waste management facilities on agricultural land where "farming capability is minimal"—a term left undefined, creating a perverse incentive for landowners to demonstrate low agricultural viability.
+    </div>
+    <span class="finding-ref">Sections: B.6.2.2.20, B.7.2.2.7, B.6.2.2.10, B.6.2.2.12</span>
+  </div>
+
+  <div class="finding severity-high">
+    <div class="finding-header">
+      <div class="finding-title">Amenity Zoning Density Cap vs. Stated Density Targets</div>
+      <span class="finding-tag tag-high">Critical</span>
+    </div>
+    <div class="finding-body">
+      Appendix 3 (H.3.1.1) states amenity zoning "should propose a density level that does not exceed the target density levels outlined in this Plan." However, the entire purpose of amenity zoning, stated just one line earlier, is "granting of additional development potential…in exchange for the voluntary provision of a community amenity." If proposed densities cannot exceed targets, no additional development potential is being granted—defeating the mechanism's purpose entirely. This appears to be a drafting error that confuses "target" with "maximum" density, creating legal ambiguity in every amenity zoning application.
+    </div>
+    <span class="finding-ref">Sections: H.3.1.1, H.3.1.3–H.3.1.4</span>
+  </div>
+
+  <div class="finding severity-medium">
+    <div class="finding-header">
+      <div class="finding-title">Village Containment vs. Economic Viability</div>
+      <span class="finding-tag tag-medium">Significant</span>
+    </div>
+    <div class="finding-body">
+      Section B.2.3.2.3 mandates village containment: "Expansion or extension of containment boundaries should only be considered where there are no available sites within the containment boundaries." Simultaneously, B.5.1.2.5(b) requires that "existing commercial zones are largely developed to their practical development potential and there is evidence of a community need for additional commercial land" before allowing new commercial zoning. These create a circular trap: if villages cannot expand but internal capacity is full, how is community need met? The document never resolves which policy takes priority.
+    </div>
+    <span class="finding-ref">Sections: B.2.3.2.3, B.5.1.2.5</span>
+  </div>
+
+  <div class="finding severity-medium">
+    <div class="finding-header">
+      <div class="finding-title">Environmental Protection vs. Resource Extraction</div>
+      <span class="finding-tag tag-medium">Significant</span>
+    </div>
+    <div class="finding-body">
+      Objective B.6.3.1.2 commits to protecting "the local forestry land base and large areas of unfragmented forest habitat," while B.6.3.1.3 simultaneously requires "forest management that sustains or improves yields." Maximizing sustainable yields typically requires harvesting patterns that fragment habitat. The Plan does not articulate which objective takes precedence when the two diverge, leaving decision-makers without guidance for a predictable and common conflict.
+    </div>
+    <span class="finding-ref">Sections: B.6.3.1.2, B.6.3.1.3</span>
+  </div>
+
+  <div class="finding severity-medium">
+    <div class="finding-header">
+      <div class="finding-title">Shoreline Conservation Target vs. Shoreline Commercial Development</div>
+      <span class="finding-tag tag-medium">Significant</span>
+    </div>
+    <div class="finding-body">
+      Section A.5.1.7 commits to "secure at least 30% of the island land base for conservation." Yet the Shoreline Development Designation (B.9.4) permits "general employment, commercial and boat moorage uses" and allows the Local Trust Committee to consider rezoning for new commercial and boat moorage. The Plan does not clarify whether shoreline commercial areas count against or toward the 30% conservation baseline, nor how shoreline development advances the conservation target.
+    </div>
+    <span class="finding-ref">Sections: A.5.1.7, B.9.4.2.3</span>
+  </div>
+
+  <div class="finding severity-medium">
+    <div class="finding-header">
+      <div class="finding-title">Inconsistent Environmental Assessment Language Across Parallel Mechanisms</div>
+      <span class="finding-tag tag-medium">Significant</span>
+    </div>
+    <div class="finding-body">
+      Sections H.3.1.6 (Amenity Zoning) and H.4.1.7 (Transfer of Development Potential) contain near-identical lists of environmental criteria (a)–(m), but H.3.1.6 presents these as factors the committee "should consider," while H.4.1.7 presents them as criteria the committee "should use in assessing suitability." The verb distinction—"consider" vs. "use"—creates different enforcement obligations for mechanisms that serve virtually identical environmental protection functions.
+    </div>
+    <span class="finding-ref">Sections: H.3.1.6, H.4.1.7</span>
+  </div>
+
+  <div class="finding severity-low">
+    <div class="finding-header">
+      <div class="finding-title">Secondary Suite Monitoring: Mandatory vs. Discretionary</div>
+      <span class="finding-tag tag-low">Notable</span>
+    </div>
+    <div class="finding-body">
+      Section B.2.2.2.15 mandates the Committee "will…monitor changes in order to have the effect of limiting the overall number of suites on the island." However, subsection (l) of the same policy states the Committee "may also consider limits on the numbers and location of secondary suites." The shift from mandatory monitoring to discretionary limitation within a single policy section weakens its regulatory intent.
+    </div>
+    <span class="finding-ref">Sections: B.2.2.2.15, B.2.2.2.15(l), B.2.2.2.15(n)</span>
+  </div>
+
+  <div class="finding severity-low">
+    <div class="finding-header">
+      <div class="finding-title">Agricultural Buffer Distance Ambiguity</div>
+      <span class="finding-tag tag-low">Notable</span>
+    </div>
+    <div class="finding-body">
+      DPA guidelines require a 15-metre building setback from agricultural land "to be consistent with the Guide to Edge Planning (2015)" (E.1.4.18–19), while a separate provision (E.1.7.22) requires an 8-metre vegetated buffer with 6-metre height at maturity. The plan does not clarify whether the 15-metre setback is measured from the agricultural boundary or from the edge of the 8-metre buffer, creating practical ambiguity on every edge-of-farm development.
+    </div>
+    <span class="finding-ref">Sections: E.1.4.18, E.1.4.19, E.1.7.22</span>
+  </div>
+
+  <div class="finding severity-low">
+    <div class="finding-header">
+      <div class="finding-title">Park Land Dedication and Easement Contradiction</div>
+      <span class="finding-tag tag-low">Notable</span>
+    </div>
+    <div class="finding-body">
+      Section H.5.2.2 states that land "within a utility right-of-way or other easement could be accepted as public park land" but then immediately stipulates that "the area within the right-of-way should not be accepted as part of the 5 per cent park land dedication." If a subdivider offers easement land as parkland, must they dedicate additional land to reach 5%? The policy's structure is self-contradictory and creates legal uncertainty.
+    </div>
+    <span class="finding-ref">Section: H.5.2.2</span>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ==================== VAGUE TERMS ==================== -->
+<section id="vague">
+  <h2><span class="section-number">Part IV</span>Vague &amp; Ill-Defined Terms</h2>
+  <p class="lead">A policy document's effectiveness depends on the precision of its language. The following terms appear repeatedly throughout the OCP in policy-critical positions without operational definitions, creating inconsistent interpretation and undermining predictable governance.</p>
+
+  <details>
+    <summary><strong>"Compatible" / "Compatibility"</strong> — appears throughout, never defined</summary>
+    <div class="detail-body">
+      Used in dozens of policies (B.2.4.1.2, B.3.1.2.3, B.3.2.1.2, B.4.2.2.5, E.1.2, G.1.2.3, etc.) to require that new development be "compatible with" existing uses, village character, or the natural environment. The Definitions section (D.9) provides no definition. A three-storey mixed-use building could be "compatible" to one reviewer and incompatible to another. The absence of objective standards—height-to-setback ratios, visual impact methods, noise thresholds—invites inconsistent decision-making and legal challenge.
+    </div>
+  </details>
+
+  <details>
+    <summary><strong>"Rural Character"</strong> — the plan's most foundational undefined concept</summary>
+    <div class="detail-body">
+      Referenced in B.2.3.1.6, B.2.4.1.1, B.2.5.1.1, B.3.2.2.2, B.5.1.1.2 and numerous other sections as the quality to be preserved. The vision statement itself is built around it. Yet nowhere does the Plan define what constitutes rural character. Does it mean low density? Absence of sidewalks? Agricultural views? Gravel roads? Without a definition, every development application becomes an argument about an undefined standard.
+    </div>
+  </details>
+
+  <details>
+    <summary><strong>"Appropriate"</strong> — appears in 80+ policy statements</summary>
+    <div class="detail-body">
+      Used in contexts including "appropriate and accessible housing" (A.4.4.4), "appropriate building and site designs" (B.5.1.2.10), "appropriate uses" (B.7.1.2.4), and "appropriate development" (A.4.3.4). The term functions as a placeholder for standards that were never articulated. In each case, the reader cannot determine what "appropriate" means without additional guidance the Plan does not provide.
+    </div>
+  </details>
+
+  <details>
+    <summary><strong>"Adequate" Water Supply</strong> — critical but unquantified</summary>
+    <div class="detail-body">
+      Multiple policies (B.2.2.2.23, B.2.2.2.2.9, B.3.1.2.8, H.4.1.7(h)) require "an adequate supply" of potable water before development can proceed. Neither the Definitions section nor Section C.3 (Water) provides a quantitative benchmark for what "adequate" means—litres per capita per day, minimum flow rates, seasonal reserves, or drought-year capacity. The omission is especially concerning given the Plan's own acknowledgment that the North Salt Spring Waterworks District faces "severe restraints" on its water supply.
+    </div>
+  </details>
+
+  <details>
+    <summary><strong>"Significant"</strong> — modifies critical thresholds without quantification</summary>
+    <div class="detail-body">
+      Used in contexts like "significant new development" (A.6.2.1), "significant change in sewage volume" (B.5.2.2.6), "significant soil erosion" (E.6.2.1), and "significant alteration" (F.1.6.9). In heritage policy, it determines whether an impact assessment is required; in environmental policy, whether protective measures trigger. Without quantified thresholds, the word means whatever the reviewing officer decides it means.
+    </div>
+  </details>
+
+  <details>
+    <summary><strong>"Qualified Professional" / "Qualified Individual"</strong> — no credentials specified</summary>
+    <div class="detail-body">
+      Appears in 47+ locations across both volumes. Sections E.3.4.2, E.4.4.2, E.7.4.2, and F.1.6.9 require assessments by "qualified" professionals. No credential requirements, professional designations, experience standards, or licensing requirements are specified. A retired hobbyist could theoretically qualify as readily as a licensed Professional Engineer, creating obvious risk in environmental and heritage assessments.
+    </div>
+  </details>
+
+  <details>
+    <summary><strong>"Modest Scale"</strong> — used for village development limits</summary>
+    <div class="detail-body">
+      Section B.5.1.1.2 describes village development as needing to be of "modest scale" without any metrics. Is 50 units modest? 200? Without a quantitative threshold, developers and community members have no shared understanding of what the Plan actually permits.
+    </div>
+  </details>
+
+  <details>
+    <summary><strong>"Minimize"</strong> — used 30+ times without thresholds</summary>
+    <div class="detail-body">
+      Appears in "minimize conflicts," "minimize impacts" (E.1.4.1), "minimize wastes" (A.5.2.13), "minimize transportation needs" (A.4.4.4), and similar constructions throughout. "Minimize" implies reduction but sets no measurable target. A developer who reduces stormwater runoff by 1% could claim to have "minimized" it. Without numeric standards, the term provides no enforceable obligation.
+    </div>
+  </details>
+
+  <details>
+    <summary><strong>"Environmentally Sensitive Areas"</strong> — circularly defined</summary>
+    <div class="detail-body">
+      Defined in D.9 as "places that have special environmental attributes worthy of retention or special care." The Plan acknowledges (A.5.2.4) that the ESA maps show only "general areas" and that "further study could more clearly identify boundaries." The primary environmental constraint in the entire Plan is thus self-admittedly approximate and requires undefined "further study" to make operational—a study that may never be conducted.
+    </div>
+  </details>
+
+  <details>
+    <summary><strong>"Slightly Higher Density"</strong> — appears in multiple village policies</summary>
+    <div class="detail-body">
+      Used in B.5.2.2.4, B.5.3.2.6, and B.5.4.2.4 to describe acceptable density increases in villages. The Plan defines density categories precisely elsewhere (high, medium, low, very low with units per hectare), but "slightly higher" than medium could mean almost anything. The imprecision is especially problematic since village density decisions are among the most contested planning issues.
+    </div>
+  </details>
+
+  <details>
+    <summary><strong>Other Problematic Terms</strong></summary>
+    <div class="detail-body">
+      Additional undefined terms that appear in policy-critical contexts include: "blends well with the community" (B.3.1.1.5), "attractive" and "pleasant" (E.1.4.10, E.1.6.15), "energy security" (G.1.4.2), "well-established non-profit groups" (H.3.4.3), "scenic areas" (H.5.2.1), "pedestrian-friendly" (E.1.3.3), and "development" itself—the Plan never clearly defines what activity triggers a development permit requirement.
+    </div>
+  </details>
+</section>
+
+<hr class="divider">
+
+<!-- ==================== WEAKNESSES ==================== -->
+<section id="weaknesses">
+  <h2><span class="section-number">Part V</span>Weakest Parts of the Document</h2>
+  <p class="lead">Beyond individual inconsistencies and vague terms, the following represent structural weaknesses—systemic problems in how the Plan was designed that affect its ability to function as a governance instrument.</p>
+
+  <h3>1. Enforcement Is Almost Entirely Absent</h3>
+  <p>The OCP contains no compliance monitoring framework, no penalties for non-compliance, no audit mechanisms, and no enforcement procedures for covenant violations. Part D (Administration) acknowledges that "the success of any plan depends on many things that cannot be known" and merely suggests the Committee "could identify several measures or indicators." The word "could" makes even monitoring optional. There is no graduated penalty structure for exceeding secondary suite numbers, violating shoreline protections, failing to maintain agricultural buffers, or breaching development permit conditions. The entire Plan relies on voluntary compliance and good faith.</p>
+
+  <h3>2. The "Will" / "Should" / "Could" Framework Undermines Itself</h3>
+  <p>Section D.1.4 attempts to establish a hierarchy: "will" means commitment (as resources are available), "should" means guidance, "could" means discretionary. But the qualifier "as resources are available" transforms even "will" statements into escape clauses. Meanwhile, the distinction between "should" and "could" is applied inconsistently—similar discretionary decisions use different verbs (compare B.2.3.2.1's "should consider" with B.2.3.2.5's "may consider"). A document that cannot maintain discipline in its own imperative language cannot provide reliable policy direction.</p>
+
+  <h3>3. First Nations Engagement Is Perfunctory</h3>
+  <p>References to First Nations appear in only a handful of sections (A.8.1.1, A.8.2.12, B.7.1.1.2, B.9.1.2) and are largely advisory—"urged," "encouraged," "consultation." No policy establishes mandatory consultation protocols, dispute resolution procedures, authority to participate in decisions affecting Indigenous interests, or consultation timelines. There is no mention of Free, Prior, and Informed Consent principles. For a 2008 document governing land that the Vision statement itself acknowledges as First Nations "traditional territory," this represents a serious omission by modern planning standards.</p>
+
+  <h3>4. Implementation Is Deferred Indefinitely</h3>
+  <p>Section D.5.3 states: "The Local Trust Committee will develop a Plan Implementation Program"—in the future tense. No timeline is given. No priorities are established. No resource allocation is identified. Multiple policies require future bylaw amendments, updated mapping, creation of advisory committees, or development of assessment methodologies, but none include deadlines. Sections A.8.2.3 (archaeological inventory), B.5.2.2.8 (Ganges local area plan), and B.5.3.2.10–11 (Fulford heritage guidelines) are all commitments without timeframes. The result is that the document reads as a collection of aspirations rather than an actionable plan.</p>
+
+  <h3>5. The Reliance on External Actors Without Enforcement Power</h3>
+  <p>Dozens of policies "urge" or "encourage" other agencies—BC Hydro, the Ministry of Transportation, the Capital Regional District, the Chamber of Commerce—to take action. These provisions create a false sense of comprehensiveness. A policy that "urges" the Ministry to build sidewalks appears to address pedestrian infrastructure, but the Ministry has no obligation to comply. The Plan lacks any mechanism for follow-up if urged agencies decline.</p>
+
+  <h3>6. Overlapping Regulatory Layers Without Priority Rules</h3>
+  <p>A single property in Ganges Village could simultaneously fall within the Village Designation (B.5.2), DPA 1 (E.1), the Heritage Conservation Area (F.1), a Community Well Capture Zone (DPA 5, E.5), and a Riparian Area (DPA 7, E.7). When guidelines conflict across these overlapping designations, the Plan establishes no priority rules. A developer or Trust Committee member has no guidance on which set of guidelines prevails.</p>
+
+  <h3>7. Water Supply Governance Is a Critical Gap</h3>
+  <p>Despite repeated acknowledgment that the North Salt Spring Waterworks District faces "severe restraints" on water supply, no maximum density cap is imposed for Ganges Village or any other area based on water capacity. The Plan requires "confirmation" of sewage capacity (B.5.2.2.6) before densification, but no parallel mandatory requirement exists for water supply assessment. For an island community where water scarcity is the primary constraint on development, this is an extraordinary omission.</p>
+
+  <h3>8. Heritage Conservation Guidelines Lack Teeth</h3>
+  <p>The Ganges Heritage Conservation Area (F.1) lists 12 protected buildings and protected trees, but conservation guidelines are almost entirely composed of "should" statements. Heritage impact assessments may be required for "significant" alteration (undefined), prepared by a "qualified individual" (undefined credentials), and secured by bonds that "may be required" (discretionary) "in any amount satisfactory to the Local Trust Committee" (no standards). The heritage framework is aspirational rather than protective.</p>
+
+  <h3>9. Climate Targets Are Outdated and Unmonitored</h3>
+  <p>Section A.6.1.7 sets greenhouse gas reduction targets of "at least 15% by 2015" and "at least 40% by 2020"—both dates have now passed without any monitoring mechanism established by the Plan. The 2050 target of 85% reduction exists in a document that provides no method for measurement, no reporting requirements, and no consequences for failure. These targets, while specific, are operationally meaningless without implementation infrastructure.</p>
+
+  <div class="grade-box" style="margin-top: 2rem;">
+    <div class="grade-letter" style="color: var(--red);">D+</div>
+    <div class="grade-desc">
+      <strong>Enforcement &amp; Implementation Grade</strong><br>
+      While the Plan's vision, structure, and coverage merit a higher overall mark, its enforcement and implementation provisions are critically weak. The document provides no mechanism to ensure any of its policies are actually carried out.
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ==================== COHERENCE ==================== -->
+<section id="coherence">
+  <h2><span class="section-number">Part VI</span>Is This Document Coherent Enough?</h2>
+  <p class="lead">The ultimate question: can Salt Spring Islanders rely on this document as a coherent policy framework for governing land use on their island?</p>
+
+  <h3>The Short Answer</h3>
+  <p>The OCP is coherent as a <em>vision document</em> but not as a <em>regulatory instrument</em>. It articulates what the community values with eloquence and care. It does not provide the precision, enforceability, or internal consistency needed to translate those values into predictable governance outcomes.</p>
+
+  <h3>What the Document Does Well</h3>
+  <p>The Plan's strengths are real and should be acknowledged. The Vision statement (A.3) is one of the more thoughtful community vision statements in Canadian municipal planning—it acknowledges limits, honours heritage, and balances aspiration with restraint. The comprehensive geographic coverage ensures every parcel is designated. The DPA design guidelines for village areas provide genuinely useful specificity on setbacks, parking, signage, and landscaping. The amenity zoning cap of 40 units island-wide and the 75% valuation threshold demonstrate capacity for precise policy-making. The plan's environmental sensibility—its commitment to the precautionary principle (A.4.1.4), its 30% conservation target, its recognition that "healthy societies depend on healthy ecosystems"—reflects sophisticated thinking about the human-environment relationship.</p>
+
+  <h3>Where Coherence Breaks Down</h3>
+  <p>The fundamental problem is that the document tries to be simultaneously aspirational and regulatory, and succeeds at neither fully. The growth cap in B.2.1.2.1 is undermined by amenity zoning, affordable housing exceptions, and undefined "carrying capacity." The agricultural protection in B.6 is contradicted by permitted non-farm uses and park expansion into ALR land. The environmental commitments in Part A are implemented through DPA guidelines that use "should" language and exempt broad categories of development. The heritage protections in Part F are advisory. The climate targets in A.6 are expired and unmonitored.</p>
+
+  <p>Most critically, the document lacks a coherent theory of enforcement. Planning scholar Patsy Healey has argued that the effectiveness of a planning document depends not on the elegance of its policies but on the "institutional capacity" to implement them. This OCP establishes no monitoring framework, no compliance mechanisms, no penalty structures, and no audit processes. It defers its own Implementation Program to a future date. The result is a document that can be cited in support of almost any decision—approval or denial—because its discretionary language provides sufficient flexibility for either conclusion.</p>
+
+  <h3>Section-by-Section Regulatory Assessment</h3>
+  <table class="assessment-table">
+    <thead>
+      <tr>
+        <th>Section</th>
+        <th>Policy Specificity</th>
+        <th>Enforceability</th>
+        <th>Internal Consistency</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>A. Vision &amp; Objectives</td>
+        <td><span class="pill pill-strong">Strong</span></td>
+        <td><span class="pill pill-weak">Weak</span></td>
+        <td><span class="pill pill-strong">Strong</span></td>
+      </tr>
+      <tr>
+        <td>B. Land Use Designations</td>
+        <td><span class="pill pill-moderate">Moderate</span></td>
+        <td><span class="pill pill-moderate">Moderate</span></td>
+        <td><span class="pill pill-weak">Weak</span></td>
+      </tr>
+      <tr>
+        <td>C. Infrastructure</td>
+        <td><span class="pill pill-moderate">Moderate</span></td>
+        <td><span class="pill pill-weak">Weak</span></td>
+        <td><span class="pill pill-moderate">Moderate</span></td>
+      </tr>
+      <tr>
+        <td>D. Administration</td>
+        <td><span class="pill pill-weak">Weak</span></td>
+        <td><span class="pill pill-weak">Weak</span></td>
+        <td><span class="pill pill-moderate">Moderate</span></td>
+      </tr>
+      <tr>
+        <td>E. Dev. Permit Areas</td>
+        <td><span class="pill pill-strong">Strong</span></td>
+        <td><span class="pill pill-moderate">Moderate</span></td>
+        <td><span class="pill pill-moderate">Moderate</span></td>
+      </tr>
+      <tr>
+        <td>F. Heritage Conservation</td>
+        <td><span class="pill pill-moderate">Moderate</span></td>
+        <td><span class="pill pill-weak">Weak</span></td>
+        <td><span class="pill pill-moderate">Moderate</span></td>
+      </tr>
+      <tr>
+        <td>G. Temporary Use Permits</td>
+        <td><span class="pill pill-moderate">Moderate</span></td>
+        <td><span class="pill pill-weak">Weak</span></td>
+        <td><span class="pill pill-weak">Weak</span></td>
+      </tr>
+      <tr>
+        <td>H. Appendices</td>
+        <td><span class="pill pill-strong">Strong</span></td>
+        <td><span class="pill pill-moderate">Moderate</span></td>
+        <td><span class="pill pill-moderate">Moderate</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Conclusion</h3>
+  <p>The Salt Spring Island OCP is a document of genuine community aspiration wrapped in a framework that cannot reliably deliver on its promises. Islanders can draw inspiration from its vision, but they cannot depend on its policies to produce consistent, predictable outcomes. The Plan needs, at minimum: quantified definitions for its core terms; mandatory language replacing discretionary language in its most important policies; an enforcement and monitoring framework with teeth; resolution of the growth-cap-versus-density-bonus contradiction; meaningful First Nations consultation protocols; and a binding implementation timeline.</p>
+
+  <p>Until those revisions are made, the OCP functions as an advisory document that gives the Local Trust Committee broad discretion. Whether that discretion is exercised wisely depends entirely on the people who happen to be sitting on the Committee at any given time—which is precisely the kind of governance uncertainty a community plan is supposed to prevent.</p>
+</section>
+
+</main>
+
+<footer>
+  Critical analysis prepared February 2026. Based on OCP Bylaw No. 434 (2008), Consolidated Volumes 1 &amp; 2 (October 2022/2020).<br>
+  This analysis is for informational and educational purposes and does not constitute legal advice.
+</footer>
+
+<script>
+// OCP content database for search (key sections extracted and indexed)
+const ocpSections = [
+  { section: "A.1 — The Islands Trust", content: "In recognition of the unique amenities and environment of the Gulf Islands, the province passed the Islands Trust Act in 1974 which established the Islands Trust with a mandate: 'The object of the trust is to preserve and protect the trust area and its unique amenities and environment for the benefit of the residents of the trust area and of British Columbia generally.' The Islands Trust Area encompasses the Gulf Islands from Denman Island in the north to the US border in the south." },
+  { section: "A.2 — The Official Community Plan", content: "This Official Community Plan provides a community vision for Salt Spring Island and defines the land use objectives, policies and actions that could achieve this vision. It acts as a guide for future decisions of the Salt Spring Island Local Trust Committee, community members, other levels of government and service providers." },
+  { section: "A.3 — Vision Statement", content: "We live in a place of extraordinary beauty, great environmental significance, and rare biological diversity. We appreciate and accept our responsibility to be the stewards of our island home, to honour its past, care for its present, and protect its future. We also respect our island's human heritage – the First Nations peoples who lived in harmony with the land and sea, and whose traditional territory we inhabit, and the early Hawaiian, black and Japanese pioneers. We know there are limits to growth, limits to resources, and limits to the ability of our environment to absorb continued development." },
+  { section: "A.4.1 — General Objectives", content: "To recognize and protect the fragility and significance of our natural environment as one of our community's greatest and irreplaceable assets. To retain our island's rural character and peaceful and quiet atmosphere; to guide development so that it complements the outstanding natural beauty. To adopt the precautionary principle in the decision-making of the Local Trust Committee. To identify and protect important components of our island's heritage, including archaeological and First Nations cultural sites." },
+  { section: "A.4.2 — Sustainability", content: "To recognize the importance of sustainability in all community decisions. To avoid land use decisions that threaten the integrity or sustainability of natural ecosystems. To maintain and restore the community's natural capital represented by agricultural and forest land base, potable water supplies, and natural and unspoiled rural character. To recognize that long-term social and economic well being requires living within the limits of ecological sustainability." },
+  { section: "A.4.3 — Limits to Growth", content: "To continue to focus attention on the finite nature of all of our island's resources, especially those drawn from our natural environment. To reflect the finite nature of islands by identifying limits to residential, commercial and institutional growth tailored to the community's land base and ecological carrying capacity. Special attention should be paid to ensuring that the human use of potable water can be sustained without negative impact on other values." },
+  { section: "A.4.4 — Our Sense of Community", content: "To ensure that our community continues to function as an authentic, resident-centred community in the face of internal and external pressures to change and grow; to ensure that growth, including the growth of tourism, is managed in a way that does not displace or detract from our community's function as a home. To preserve and protect human diversity by ensuring a broad spectrum of appropriate and accessible housing, transportation choices, service opportunities and choices of livelihood. To remain an island community without a bridge or tunnel to other land masses." },
+  { section: "A.5 — Island Environment Policies", content: "The Local Trust Committee will promote public education and the encouragement of private stewardship. The Committee should consider rezoning applications to transfer development potential from Environmentally Sensitive Areas or High Biodiversity Areas. Protection of these areas is an eligible community amenity which could be exchanged for higher density. The Committee should not make zoning changes resulting in more development or greater impacts on Environmentally Sensitive Areas. The Committee should secure at least 30% of the island land base for conservation." },
+  { section: "A.6 — Climate Change & Energy Efficiency", content: "To consider the impacts of climate change as a central factor in land use decision-making. To establish the importance of energy efficiency, energy security, greenhouse gas emissions reduction, and carbon cycling. The Local Trust Committee adopted emissions reduction targets of at least 15% by 2015, at least 40% by 2020, and at least 85% by 2050, based upon 2007 data. The Committee should develop improved methods of assessing energy efficiency and climate change impacts." },
+  { section: "A.7 — Natural Hazard Areas", content: "To identify areas of natural hazard on the island, including steep slopes, soil erosion, flooding, and wildfire. To manage development in hazard areas to protect life, property and infrastructure. Development in areas of high slope stability hazard or high soil erosion hazard shown on Maps 13, 14, and 14a should be avoided or carefully managed through development permit area guidelines." },
+  { section: "A.8 — Island Heritage", content: "To identify and protect the island's built, natural and cultural heritage including archaeological sites, traditional buildings, scenic roads and areas of significance to First Nations peoples. The Local Trust Committee should support efforts to develop an updated inventory of archaeological resources. Heritage Conservation Areas may be established. The community is encouraged to identify and protect heritage features." },
+  { section: "B.2 — Residential Land Use", content: "Zoning changes should be avoided if they would likely result in a larger island population than is expected under the development potential zoned in 2008. Exceptions to this policy are to be few and minor and only to achieve affordable housing. The Local Trust Committee should conduct an ongoing assessment of housing demand and supply and identify land use regulatory options for meeting community housing needs including secondary suites, flexible housing units, and affordable multi-unit projects." },
+  { section: "B.2.2.2 — Affordable Housing Policies", content: "The Local Trust Committee should conduct an ongoing assessment of housing demand and supply. Inclusionary zoning should be considered for affordable housing. Secondary suites are permitted with conditions: maximum one suite per dwelling, maximum 40% of floor area and no more than 90 m2. The Committee will monitor changes to limit the overall number of suites. Housing agreements and other measures should ensure that suites are affordable. Multiple-unit affordable housing projects are encouraged, especially those which expand options through co-housing, cooperative ownership, and sweat equity projects." },
+  { section: "B.3 — Commercial & Employment Land Use", content: "To encourage tourist accommodation, facilities and commercial recreation uses that are compatible with preserving and protecting the island's natural environment, rural character and sense of community. Tourism should be of a quality, type and scale that blends well with the community. Attractions unrelated to the island's natural environment should be discouraged. The Local Trust Committee will evaluate impacts of proposals on the local neighbourhood and accommodations industry." },
+  { section: "B.4 — Community & Institutional Land Use", content: "To accommodate the community's need for institutional uses including educational, social, cultural and religious facilities. Land for community and institutional uses should be sufficient to serve the needs of the community. The Committee should consider institutional uses in village areas where they are accessible by public transit and pedestrian routes." },
+  { section: "B.5 — Village Land Use (Ganges)", content: "To maintain Ganges as the primary commercial and service centre. Maximum residential density on any single property will remain at 37 units per ha. Special needs housing may be permitted at a floor space ratio of 0.6, site coverage of 33 percent, maximum two storeys, 50 units maximum. Any rezoning proposals expected to result in net increase in water demand must account for severe restraints on the District's available water supply. The Committee will support development of a Ganges Harbour Management Plan." },
+  { section: "B.5.3 — Village Land Use (Fulford)", content: "To maintain Fulford as a secondary village centre with small-scale commercial uses. The Committee should consider developing development permit guidelines and heritage permit guidelines for Fulford. Slightly higher density residential development could be considered adjacent to the village core where water and sewage services are available." },
+  { section: "B.6.2 — Agriculture", content: "To limit the non-farm use of agricultural land. To support local farming by recognizing the importance of agriculture. The Agricultural Advisory Committee should be maintained. Zoning changes should not be made to allow large new multi-family, general employment, institutional or commercial developments in the Agriculture designation. Small-scale processing and sales, farming schools, farm-based tourist accommodation could be considered where farming capability is minimal. Vegetated buffers of 8 metres wide with a minimum height of 6 metres at maturity are required between agricultural and non-agricultural uses." },
+  { section: "B.6.3 — Forestry & Watershed", content: "To protect the local forestry land base and large areas of unfragmented forest habitat. To manage forests so that yields are sustained or improved. To protect the island's community water supply watersheds. The Local Trust Committee should encourage sustainable forestry practices through zoning, development permit areas, and public education. Forest lands should be managed to maintain watershed health and water quality." },
+  { section: "B.7 — Parks & Recreation", content: "To develop a system of parks and recreation facilities that meets the needs of residents and visitors. To secure up to 5 per cent of land being subdivided as park dedication. A dedication of less than 5 per cent could be considered if other community benefits are being provided. The Committee supports non-farm use of approximately 7 hectares in the Agricultural Land Reserve for parks, offset by including other lands into the ALR." },
+  { section: "B.8 — Conservation Land Use", content: "To recognize the ecological values and habitat significance of land in the Watershed and Uplands Conservation designations. These areas should be considered Development Potential Donor Areas for the purposes of transfer of development potential. Zoning changes that would result in greater development impacts should not be made in these designations." },
+  { section: "B.9 — Shoreline & Aquatic Use", content: "To protect and enhance marine and freshwater shoreline areas. Shoreline conservation areas are designated to protect sensitive ecosystems. Shoreline development designation permits general employment, commercial and boat moorage uses. The Local Trust Committee should ensure that foreshore and aquatic developments are compatible with the natural environment. Development along shorelines should maintain public access and protect marine habitat including herring spawning areas, clam beds and seal haulouts." },
+  { section: "C.2 — Transportation", content: "To maintain and improve the transportation network to serve the needs of island residents. To encourage multiple modes of transportation including walking, bicycling and public transit. To support BC Transit in maintaining and expanding public transit service. The Ministry of Transportation is urged to develop specific policies for sidewalks and roadside walkways. Bicycle routes shown on Map 4 should be maintained and expanded." },
+  { section: "C.3 — Potable Water", content: "To protect the quality and sustainability of the island's surface water and groundwater resources. The North Salt Spring Waterworks District faces severe restraints on available water supply. Water systems excluding NSSWD serve various community areas. Development should demonstrate adequate water supply. The Local Trust Committee should work with water districts and the provincial government to ensure long-term water security." },
+  { section: "C.4 — Waste Management", content: "To manage solid and liquid waste in a manner that protects the environment and public health. To support waste reduction, reuse and recycling programs. The Ganges sewered area is shown on Maps 7 and 8. Expansion of the sewered area should be carefully managed to avoid encouraging excessive development. The Capital Regional District should continue to improve its recycling and composting programs." },
+  { section: "D.1 — Authority & Interpretation", content: "This Plan is enacted under the authority of the Islands Trust Act and the Local Government Act. 'Will' means actions the Committee is committed to as resources are available. 'Should' means a guideline expected to contribute to objectives. 'Could' means actions consistent with the Plan at Committee discretion. Most of this Plan is non-regulatory; regulations apply if property is within a Development Permit Area or Heritage Conservation Area. Map boundaries are approximate; precise boundaries are in land use bylaws." },
+  { section: "D.5 — Implementation", content: "The Local Trust Committee will develop a Plan Implementation Program. Implementation tools include changes to land use bylaws, development permits, heritage alteration permits, covenants with willing property owners, and formation of advisory committees. Some policies can be put in place over a longer term. The Committee will maintain advisory groups to assist with implementation." },
+  { section: "D.8 — Monitoring Success", content: "The success of any plan depends on many things that cannot be known. The Committee could identify several measures or indicators to assess effectiveness. Results could be used when amending this Plan or other policies and bylaws. The Committee should consider amending policies if objectives are not being met." },
+  { section: "D.9 — Definitions", content: "Affordable housing means housing for which a household spends no more than 30% of gross household income. Environmentally Sensitive Areas means places that have special environmental attributes worthy of retention or special care. High density residential means greater than 1 dwelling per 0.10 hectare. Medium density means between 1 per 0.10 ha and 1 per 2 ha. Low density means less than 1 per 2 ha. Very low density means less than 1 per 8 ha." },
+  { section: "E.1 — DPA 1: Island Villages", content: "Development Permit Area 1 applies to commercial, general employment, and multifamily residential in village cores. Guidelines address form, character, landscaping, parking, signs, and drainage. Buildings should be designed with no or little setback from the front property line to create compact villages. Parking lots should generally be behind buildings with maximum street frontage of 10 metres. Agricultural land buffers of 8 metres wide and 15-metre building setbacks are required. Institutional developments are exempt from form and character guidelines." },
+  { section: "E.3 — DPA 3: Shoreline", content: "Development Permit Area 3 covers all area between the natural boundary of the sea and a line drawn 300 metres seaward. Guidelines address protection of marine habitat, foreshore structures, and shoreline vegetation. Emergency works to prevent flood damage are exempt. Vegetation removal approved by the Ministry of Environment is exempt from local review." },
+  { section: "E.6 — DPA 6: Unstable Slopes", content: "Development Permit Area 6 applies to areas with high slope stability hazard or high soil erosion hazard shown on Maps 23-24. Reports by Professional Engineers are required for development in these areas. Guidelines address site assessment, building placement, and drainage management. Security may be required to guarantee performance of conditions." },
+  { section: "E.7 — DPA 7: Riparian Areas", content: "Development Permit Area 7 protects watercourses and their riparian zones. A qualified environmental professional must assess proposed development near watercourses. Development should maintain natural watercourse function and protect fish habitat. Areas of cleared vegetation greater than 280 m2 require security. Covenants are required to guide future development near watercourses." },
+  { section: "F.1 — Ganges Heritage Conservation Area", content: "The Ganges Village Core Heritage Conservation Area protects 12 named buildings and heritage features, plus mature trees with trunk diameter over 20 cm and fruit trees over 50 years old. Conservation guidelines require salvaging and reusing original materials wherever practical. Additions should not detract from heritage character. Heritage impact assessments may be required for significant alteration, prepared by a qualified individual. Security may be required in any amount satisfactory to the Local Trust Committee." },
+  { section: "G.1 — Temporary Use Permits", content: "Temporary Use Permits may be issued for up to two years and renewed once for up to two further years. Uses should be compatible with adjacent land uses considering noise, traffic, parking, general activity levels. Permits should not be issued for uses exceeding 60 days unless meeting specific criteria. Operational plans including hours and days of operation are required. Security to guarantee restoration may be required." },
+  { section: "H.2 — Shared Residential Zoning", content: "Shared residential zoning allows clustered building sites on about 20-30% of the parcel, with good agricultural soils left as open space. Building sites should be screened by natural vegetation. The remaining land should be managed for conservation, agriculture, or community use." },
+  { section: "H.3 — Amenity Zoning", content: "Amenity zoning permits granting additional development potential in exchange for voluntary community amenities. A maximum of 40 additional dwelling units across the island. No more than 10 additional units per amenity. Amenity value must equal not less than 75% of the increase in land value. Eligible amenities include affordable housing, parkland, heritage protection, community facilities, farmland, and energy-efficient design exceeding Building Code. Amenities must be legally guaranteed at adoption." },
+  { section: "H.4 — Transfer of Development Potential", content: "Transfer of development potential allows reducing density in Donor Areas (environmentally sensitive, hazardous, or high biodiversity lands) and increasing density in Receiving Areas. Protected land must be not less than minimum average parcel size for the zone. Protection mechanisms include rezoning with conservation covenants, dedication to public bodies, heritage designation, or inclusion in the Agricultural Land Reserve. Receiving areas must be within about 2.5 km of a transit route." },
+  { section: "H.5 — Park Land Dedication", content: "Park land should be acquired through subdivision dedication of up to 5% of land being subdivided. Priority areas for park acquisition are identified for each village area. Land within utility rights-of-way could be accepted as park land but should not count toward the 5% dedication requirement. Consultation with the Salt Spring Island Parks and Recreation Commission should guide acquisition decisions." }
+];
+
+function performSearch() {
+  const query = document.getElementById('searchInput').value.trim().toLowerCase();
+  const resultsDiv = document.getElementById('searchResults');
+
+  if (!query) {
+    resultsDiv.innerHTML = '<div class="no-results">Type a question or keyword to search the OCP.</div>';
+    return;
+  }
+
+  const terms = query.split(/\s+/).filter(t => t.length > 2);
+
+  const scored = ocpSections.map(s => {
+    let score = 0;
+    const contentLower = s.content.toLowerCase();
+    const sectionLower = s.section.toLowerCase();
+
+    // Exact phrase match
+    if (contentLower.includes(query)) score += 10;
+    if (sectionLower.includes(query)) score += 15;
+
+    // Individual term matches
+    terms.forEach(term => {
+      const regex = new RegExp(term, 'gi');
+      const matches = contentLower.match(regex);
+      if (matches) score += matches.length * 2;
+      if (sectionLower.includes(term)) score += 5;
+    });
+
+    return { ...s, score };
+  }).filter(s => s.score > 0).sort((a, b) => b.score - a.score).slice(0, 8);
+
+  if (scored.length === 0) {
+    resultsDiv.innerHTML = '<div class="no-results">No matching sections found. Try different keywords or a broader search term.</div>';
+    return;
+  }
+
+  resultsDiv.innerHTML = scored.map(s => {
+    let highlighted = s.content;
+    terms.forEach(term => {
+      const regex = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+      highlighted = highlighted.replace(regex, '<mark>$1</mark>');
+    });
+    // Truncate to ~300 chars around first match
+    const firstMark = highlighted.indexOf('<mark>');
+    let excerpt = highlighted;
+    if (highlighted.length > 400) {
+      const start = Math.max(0, firstMark - 100);
+      const end = Math.min(highlighted.length, start + 400);
+      excerpt = (start > 0 ? '…' : '') + highlighted.slice(start, end) + (end < highlighted.length ? '…' : '');
+    }
+    return `<div class="search-result-item"><strong>${s.section}</strong>${excerpt}</div>`;
+  }).join('');
+}
+
+function quickSearch(term) {
+  document.getElementById('searchInput').value = term;
+  performSearch();
+}
+
+// Search on Enter key
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') performSearch();
+});
+
+// Active nav highlighting
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('nav a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+      });
+    }
+  });
+}, { rootMargin: '-80px 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
