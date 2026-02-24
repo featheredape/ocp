@@ -1,0 +1,127 @@
+Salt Spring Island OCP — External Regulatory Document Reference List
+====================================================================
+Prepared: February 24, 2026
+
+This list identifies the key external regulatory documents from the Islands
+Trust and the Capital Regional District (CRD) that govern or interact with
+the Salt Spring Island Official Community Plan (Bylaw No. 434, 2008).
+
+Note: Direct PDF downloads from islandstrust.bc.ca and crd.ca were blocked
+by the network proxy during this session. URLs are provided for manual
+download. Content was obtained through web search results and verified
+against multiple sources.
+
+=====================================
+ISLANDS TRUST DOCUMENTS
+=====================================
+
+1. ISLANDS TRUST POLICY STATEMENT — Bylaw No. 17
+   Status: Current (adopted 1994, consolidated 2003, in force)
+   URL: https://islandstrust.bc.ca/document/islands-trust-policy-statement-bylaw-no-17/
+   Alt: https://islandstrust.bc.ca/document/islands-trust-policy-statement-consolidated-2023/
+   Relevance: CRITICAL — The overarching policy framework. Under s.15 of the
+   Islands Trust Act, the OCP must not be "contrary to or at variance with"
+   this Statement. Contains directive policies that local trust committees
+   "shall" address in OCPs and regulatory bylaws.
+
+2. ISLANDS TRUST POLICY STATEMENT DRAFT — Bylaw No. 183
+   Status: Draft (First Reading July 29, 2025; Phase 4 public engagement
+           ongoing to Feb 2026)
+   URL: https://www.friendsofthegulfislands.ca/wp-content/uploads/2024/12/2024-12-3-TPS-draft.pdf
+   Alt: https://sd46.diligent.community/document/797e9b23-58cc-49b1-847f-f97b84923bb0/
+   Relevance: HIGH — Proposed replacement for Bylaw 17. Significantly
+   strengthens directives on housing, ecosystems, freshwater, reconciliation,
+   and climate change. Will require OCP amendments upon adoption.
+
+3. SALT SPRING ISLAND LAND USE BYLAW — Bylaw No. 355
+   Status: Current (consolidated Sept 2020, with subsequent amendments)
+   URL: https://islandstrust.bc.ca/wp-content/uploads/2021/02/bl-355_lub_2020-09.pdf
+   Alt: https://islandstrust.bc.ca/document/salt-spring-island-land-use-bylaw-no-2023/
+   Relevance: CRITICAL — The zoning bylaw that implements the OCP.
+   Establishes permitted uses, densities, setbacks, and subdivision
+   requirements for every parcel on the island. Inconsistencies between
+   OCP designations and LUB zones directly affect property owners.
+
+4. ISLANDS TRUST ACT — RSBC 1996, c. 239
+   Status: Current provincial legislation
+   URL: https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/96239_01
+   Alt: https://www.canlii.org/en/bc/laws/stat/rsbc-1996-c-239/latest/rsbc-1996-c-239.html
+   Relevance: HIGH — Establishes the legal framework: the "object" of the
+   Trust (s.3), Policy Statement requirements (s.15), and the authority and
+   obligations of local trust committees.
+
+=====================================
+CAPITAL REGIONAL DISTRICT DOCUMENTS
+=====================================
+
+5. CRD BUILDING REGULATION BYLAW — Bylaw No. 3741
+   Status: Current (consolidated Feb 2023)
+   URL: https://www.crd.ca/media/file/crdbylaw3741consolidated8feb2023
+   Relevance: MODERATE — Regulates building permits, inspections, and
+   construction standards in the Salt Spring Island Electoral Area.
+   Interacts with OCP energy efficiency objectives (A.6) and building
+   design guidelines (E.1).
+
+6. CRD ELECTORAL AREAS WATER CONSERVATION BYLAW — Bylaw No. 4492
+   Status: Current (adopted 2023, amended 2025; effective May 1–Sept 30)
+   URL: https://www.crd.ca/media/file/bylawno4492consolidatedapril2025
+   Relevance: HIGH — Regulates water use in CRD water systems on Salt Spring
+   (Highland-Fernwood, Fulford, Cedars of Tuam). Establishes 4-stage
+   restriction system. Interacts directly with OCP water policies (C.3)
+   and density provisions linked to water supply.
+
+7. CRD NOISE SUPPRESSION BYLAW (SALT SPRING ISLAND) — Bylaw No. 3384
+   Status: Current (adopted 2006, upheld by BC Supreme Court 2013)
+   URL: https://www.crd.ca/media/file/3384-noise-suppression-bylaw-salt-spring-island-no-1-2006b
+   Relevance: MODERATE — Regulates noise on Salt Spring Island.
+   Interacts with OCP commercial/tourist use policies (B.3) and
+   temporary use permit provisions (G.1).
+
+8. CRD COMMUNITY PARKS REGULATIONS — Bylaw No. 3795
+   Status: Current (adopted 2012)
+   URL: https://www.crd.ca/media/file/3795-community-parks-regulations-juan-de-fuca-and-salt-spring-island-electoral-areas
+   Relevance: MODERATE — Regulates community parks in the Salt Spring Island
+   Electoral Area. Interacts with OCP parks and recreation policies (B.7)
+   and park land dedication provisions (H.5).
+
+9. CRD FIRE REGULATION BYLAW — Bylaw No. 4489
+   Status: Current (adopted 2022)
+   URL: https://www.crd.ca/programs-services/bylaw-compliance/crd-regulatory-bylaws
+   Relevance: LOW-MODERATE — Fire safety regulations. Interacts with OCP
+   natural hazard areas (A.7) and wildfire management.
+
+10. CRD ANIMAL REGULATION AND IMPOUNDING BYLAW — Bylaw No. 1465
+    Status: Current (adopted 1986)
+    URL: https://www.crd.ca/programs-services/bylaw-compliance/crd-regulatory-bylaws
+    Relevance: LOW — Animal control. Minor interaction with agricultural
+    land policies.
+
+11. CRD UNSIGHTLY PREMISES BYLAW — Bylaw No. 1887
+    Status: Current (adopted 1991)
+    URL: https://www.crd.ca/programs-services/bylaw-compliance/crd-regulatory-bylaws
+    Relevance: LOW — Property maintenance standards.
+
+=====================================
+OTHER RELEVANT DOCUMENTS
+=====================================
+
+12. NORTH SALT SPRING WATERWORKS DISTRICT BYLAWS
+    Status: Various; operating under the Local Government Act
+    URL: https://northsaltspringwaterworks.ca/documents/bylaws/
+    Relevance: HIGH — The NSSWD is the largest water purveyor on the island,
+    serving the Ganges area. Its bylaws on water allocation, connection,
+    and conservation directly affect whether OCP density targets in
+    Ganges Village (B.5) can be achieved.
+
+13. AGRICULTURAL LAND COMMISSION ACT & ALR REGULATIONS
+    Status: Provincial legislation
+    URL: https://www.bclaws.gov.bc.ca/
+    Relevance: HIGH — ALR regulations override local land use bylaws.
+    The OCP acknowledges this (B.6.2) but contains internal tensions
+    regarding non-farm use and park expansion into ALR land.
+
+14. BC RIPARIAN AREAS PROTECTION REGULATION
+    Status: Provincial regulation
+    URL: https://www.bclaws.gov.bc.ca/
+    Relevance: MODERATE — Referenced in OCP DPA 7 (E.7). Sets minimum
+    standards for riparian protection that DPA guidelines must meet.
