@@ -1,4 +1,5 @@
 name = "ocp-planner-api"
+account_id = "500de4e93a305c7d7fcee9575ac0e29a"
 main = "src/worker.js"
 compatibility_date = "2024-09-23"
 
