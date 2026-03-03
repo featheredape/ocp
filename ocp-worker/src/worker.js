@@ -15,10 +15,26 @@ const MAX_CHUNKS_ACCEPTED = 100;        // Max chunks the client can send
 const MAX_CHUNK_TEXT_LENGTH = 5000;      // Max chars per chunk text
 const MAX_EMBED_TEXTS = 200;            // Max texts for /embed endpoint
 const MAX_EMBED_TEXT_LENGTH = 5000;      // Max chars per embed text
-const RERANK_TOP_N = 25;                // Chunks kept after reranking for Claude
+const RERANK_TOP_N = 40;                // Chunks kept after reranking for Claude (P2+)
 const EMBEDDING_BATCH_SIZE = 100;       // Workers AI batch size
 const RATE_LIMIT_WINDOW_MS = 60_000;    // 1 minute window
 const RATE_LIMIT_MAX_REQUESTS = 30;     // Max requests per IP per window
+
+/* ─── Model configurations ─── */
+const MODEL_CONFIGS = {
+  // Proposal 2.5: Sonnet 4.5 with extended thinking (default)
+  standard: {
+    model: "claude-sonnet-4-5-20250514",
+    max_tokens: 16000,          // budget includes thinking tokens
+    thinking: { type: "enabled", budget_tokens: 10000 },
+  },
+  // Proposal 3: Opus 4.6 for deep analysis
+  deep: {
+    model: "claude-opus-4-6-20250528",
+    max_tokens: 8192,
+    thinking: null,             // Opus doesn't need explicit thinking mode
+  },
+};
 
 /* ─── In-memory rate limiter ─── */
 const rateLimitMap = new Map(); // IP → { count, windowStart }
@@ -75,16 +91,19 @@ Implementation: D.5.1 defers all priorities to "future discretionary decisions m
 OCP strengths: The Vision statement (A.3) is well-crafted. The 30% conservation target and precautionary principle reflect genuine environmental values. DPA 1 (Village) guidelines provide specific, enforceable standards. The 40-unit amenity zoning cap and 75% valuation threshold demonstrate the Plan's capacity for precision.
 
 RESPONSE GUIDELINES:
-- Ground your answers in the OCP policy excerpts provided, citing specific policy numbers (e.g., "**B.2.2.2.15** states…").
+- Ground your answers in the OCP policy excerpts provided, citing specific policy numbers (e.g., "**B.2.2.2.15** states...").
 - When a question touches on structural issues (enforcement, contradictions, undefined terms, implementation), draw on the analytical context above to give the resident a fuller picture.
-- For factual questions ("can I build X?"), be concise: 3-6 sentences, focused on what the policies say.
-- For analytical questions ("why does the OCP say X?" or "does the OCP actually protect Y?"), you may write 2-4 paragraphs, explaining the structural dynamics behind the policy language.
-- Where policies use weak language ("should," "could," "may consider"), note this — residents deserve to know what is mandatory vs. discretionary.
+- Be thorough and comprehensive. Cover all relevant policies, cross-references, and implications. Do not truncate your analysis for brevity.
+- For factual questions ("can I build X?"), provide a complete answer covering all relevant policies, conditions, exceptions, and DPA requirements. Typically 2-4 paragraphs.
+- For analytical questions ("why does the OCP say X?" or "does the OCP actually protect Y?"), write as many paragraphs as needed to fully explain the structural dynamics, contradictions, and practical implications.
+- Where policies use weak language ("should," "could," "may consider"), note this. Residents deserve to know what is mandatory vs. discretionary.
+- Identify related policies the resident may not have thought to ask about. If a question about building triggers DPA, heritage, water, or environmental considerations, mention those connections.
 - Be balanced. Acknowledge where the OCP works well, not only where it falls short.
 - Use plain language accessible to residents, not planning jargon.
 - If the provided excerpts don't fully answer the question, say so honestly and suggest which OCP sections the reader should consult.
 - Never give legal advice. You are explaining what the OCP says and how the document functions, not how a court would interpret it.
-- Do not use markdown headings. Use plain prose. You may bold key policy numbers with **B.2.2.2.15** formatting.`;
+- Do not use markdown headings. Use plain prose. You may bold key policy numbers with **B.2.2.2.15** formatting.
+- Do not use em-dashes. Use periods, commas, semicolons, or start new sentences instead.`;
 
 export default {
   async fetch(request, env) {
@@ -242,6 +261,10 @@ async function handleAsk(request, env) {
       return jsonResponse({ error: "API key not configured" }, 500, env);
     }
 
+    // Determine mode: "standard" (P2.5 Sonnet + thinking) or "deep" (P3 Opus)
+    const mode = body.mode === "deep" ? "deep" : "standard";
+    const config = MODEL_CONFIGS[mode];
+
     // Step 1: Rerank chunks by semantic similarity
     let bestChunks;
     if (env.AI) {
@@ -257,27 +280,38 @@ async function handleAsk(request, env) {
       .join("\n\n---\n\n");
 
     const sanitizedQuestion = question.slice(0, MAX_QUESTION_LENGTH);
+    const modeHint = mode === "deep"
+      ? "Provide the most thorough, comprehensive analysis possible. Leave nothing out."
+      : "Provide a thorough, well-grounded answer covering all relevant policies.";
     const userMessage = `A resident asks: "${sanitizedQuestion}"
 
 Here are the relevant OCP policy excerpts to base your answer on:
 
 ${chunksText}
 
-Please provide a clear, helpful answer to the resident's question based on these policy excerpts.`;
+${modeHint}`;
+
+    // Build request body
+    const requestBody = {
+      model: config.model,
+      max_tokens: config.max_tokens,
+      system: SYSTEM_PROMPT,
+      messages: [{ role: "user", content: userMessage }],
+    };
+
+    // Add extended thinking for Sonnet 4.5 (P2.5)
+    if (config.thinking) {
+      requestBody.thinking = config.thinking;
+    }
 
     const claudeResponse = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
+        "anthropic-version": "2025-04-01",
       },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1024,
-        system: SYSTEM_PROMPT,
-        messages: [{ role: "user", content: userMessage }],
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     if (!claudeResponse.ok) {
@@ -287,7 +321,9 @@ Please provide a clear, helpful answer to the resident's question based on these
     }
 
     const data = await claudeResponse.json();
-    const answer = data.content?.[0]?.text;
+    // With extended thinking, the answer is in the last text block (thinking blocks come first)
+    const textBlocks = (data.content || []).filter(b => b.type === "text");
+    const answer = textBlocks.length > 0 ? textBlocks[textBlocks.length - 1].text : null;
 
     if (!answer) {
       console.error("Claude returned unexpected response shape:", JSON.stringify(data).slice(0, 200));
@@ -297,6 +333,8 @@ Please provide a clear, helpful answer to the resident's question based on these
     return jsonResponse({
       answer,
       rerankedIds: bestChunks.map(c => c.id),
+      mode,
+      model: config.model,
     }, 200, env);
   } catch (err) {
     console.error("Worker error:", err);
