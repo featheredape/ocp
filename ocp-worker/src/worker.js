@@ -15,24 +15,25 @@ const MAX_CHUNKS_ACCEPTED = 100;        // Max chunks the client can send
 const MAX_CHUNK_TEXT_LENGTH = 5000;      // Max chars per chunk text
 const MAX_EMBED_TEXTS = 200;            // Max texts for /embed endpoint
 const MAX_EMBED_TEXT_LENGTH = 5000;      // Max chars per embed text
-const RERANK_TOP_N = 40;                // Chunks kept after reranking for Claude (P2+)
+const RERANK_TOP_N_STANDARD = 25;       // Chunks kept for standard mode (faster)
+const RERANK_TOP_N_DEEP = 40;          // Chunks kept for deep mode (more thorough)
 const EMBEDDING_BATCH_SIZE = 100;       // Workers AI batch size
 const RATE_LIMIT_WINDOW_MS = 60_000;    // 1 minute window
 const RATE_LIMIT_MAX_REQUESTS = 30;     // Max requests per IP per window
 
 /* ─── Model configurations ─── */
 const MODEL_CONFIGS = {
-  // Proposal 2.5: Sonnet 4.5 with extended thinking (default)
+  // Proposal 2: Sonnet 4.5, no extended thinking (default, fast)
   standard: {
-    model: "claude-sonnet-4-5-20250514",
-    max_tokens: 16000,          // budget includes thinking tokens
-    thinking: { type: "enabled", budget_tokens: 10000 },
+    model: "claude-sonnet-4-5-20250929",
+    max_tokens: 2048,
+    thinking: null,
   },
-  // Proposal 3: Opus 4.6 for deep analysis
+  // Proposal 3: Opus 4.6 for deep analysis (uses adaptive thinking)
   deep: {
-    model: "claude-opus-4-6-20250528",
+    model: "claude-opus-4-6",
     max_tokens: 8192,
-    thinking: null,             // Opus doesn't need explicit thinking mode
+    thinking: { type: "adaptive" },
   },
 };
 
@@ -261,17 +262,20 @@ async function handleAsk(request, env) {
       return jsonResponse({ error: "API key not configured" }, 500, env);
     }
 
-    // Determine mode: "standard" (P2.5 Sonnet + thinking) or "deep" (P3 Opus)
+    // Determine mode: "standard" (P2 Sonnet fast) or "deep" (P3 Opus thorough)
     const mode = body.mode === "deep" ? "deep" : "standard";
     const config = MODEL_CONFIGS[mode];
+    const rerankN = mode === "deep" ? RERANK_TOP_N_DEEP : RERANK_TOP_N_STANDARD;
 
-    // Step 1: Rerank chunks by semantic similarity
+    // Step 1: Select best chunks
+    // Standard mode: skip reranking for speed, use keyword-scored order from client
+    // Deep mode: rerank via Workers AI embeddings for maximum relevance
     let bestChunks;
-    if (env.AI) {
+    if (mode === "deep" && env.AI) {
       const reranked = await rerankChunks(question, sanitizedChunks, env);
-      bestChunks = reranked.slice(0, RERANK_TOP_N);
+      bestChunks = reranked.slice(0, rerankN);
     } else {
-      bestChunks = sanitizedChunks.slice(0, RERANK_TOP_N);
+      bestChunks = sanitizedChunks.slice(0, rerankN);
     }
 
     // Step 2: Build prompt and call Claude
@@ -299,17 +303,18 @@ ${modeHint}`;
       messages: [{ role: "user", content: userMessage }],
     };
 
-    // Add extended thinking for Sonnet 4.5 (P2.5)
     if (config.thinking) {
       requestBody.thinking = config.thinking;
     }
+
+    const rerankedIds = bestChunks.map(c => c.id);
 
     const claudeResponse = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-api-key": apiKey,
-        "anthropic-version": "2025-04-01",
+        "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify(requestBody),
     });
@@ -317,11 +322,12 @@ ${modeHint}`;
     if (!claudeResponse.ok) {
       const errBody = await claudeResponse.text();
       console.error("Claude API error:", claudeResponse.status, errBody);
-      return jsonResponse({ error: "AI service temporarily unavailable" }, 502, env);
+      let detail = "";
+      try { detail = JSON.parse(errBody)?.error?.message || errBody.slice(0, 300); } catch { detail = errBody.slice(0, 300); }
+      return jsonResponse({ error: `Claude API ${claudeResponse.status}: ${detail}` }, 502, env);
     }
 
     const data = await claudeResponse.json();
-    // With extended thinking, the answer is in the last text block (thinking blocks come first)
     const textBlocks = (data.content || []).filter(b => b.type === "text");
     const answer = textBlocks.length > 0 ? textBlocks[textBlocks.length - 1].text : null;
 
@@ -332,7 +338,7 @@ ${modeHint}`;
 
     return jsonResponse({
       answer,
-      rerankedIds: bestChunks.map(c => c.id),
+      rerankedIds,
       mode,
       model: config.model,
     }, 200, env);
